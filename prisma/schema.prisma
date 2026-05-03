@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum EscrowState {
+  INIT
+  FUNDED
+  COMPLETED
+  DISPUTED
+  REFUNDED
+  EXPIRED
+}
+
+model Escrow {
+  id           String      @id @default(cuid())
+  escrowId     String      @unique
+  buyer        String
+  seller       String
+  arbitrator   String?
+  amount       String
+  tokenAddress String
+  state        EscrowState @default(INIT)
+  deadline     DateTime
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  events       EscrowEvent[]
+}
+
+model EscrowEvent {
+  id        String   @id @default(cuid())
+  escrowId  String
+  escrow    Escrow   @relation(fields: [escrowId], references: [escrowId])
+  eventType String
+  ledger    Int
+  txHash    String
+  payload   Json
+  createdAt DateTime @default(now())
+}
+
+model IndexerState {
+  id          String @id @default("singleton")
+  lastLedger  Int    @default(0)
+  updatedAt   DateTime @updatedAt
+}
