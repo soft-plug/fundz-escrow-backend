@@ -1,6 +1,6 @@
 # Fundz Escrow — Backend
 
-# Fundz Escrow
+#
 
 > Trustless, permissionless escrow infrastructure on the Stellar Network.
 > Built with Soroban smart contracts, a Node.js indexing backend, and a
